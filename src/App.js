@@ -22,10 +22,19 @@ export default function App() {
   }, []);
 
   async function handleLikeRepository(id) {
-    await api.post(`repositories/${id}/like`);
+    const response = await api.post(`repositories/${id}/like`);
 
-    const response = await api.get("repositories");
-    setRepositories(response.data);
+    const repositoryLiked = response.data;
+
+    const repositoriesUpdated = repositories.map((repository) => {
+      if (repository.id === id) {
+        return repositoryLiked;
+      } else {
+        return repository;
+      }
+    });
+
+    setRepositories(repositoriesUpdated);
   }
 
   return (
@@ -53,7 +62,7 @@ export default function App() {
                   // Remember to replace "1" below with repository ID: {`repository-likes-${repository.id}`}
                   testID={`repository-likes-${repositorie.id}`}
                 >
-                  {repositorie.likes} curtida(s)
+                  {repositorie.likes} curtidas
                 </Text>
               </View>
 
